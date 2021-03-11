@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "368022309530",
+    "project_id": "hash-tiger",
+    "storage_bucket": "hash-tiger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368022309530:android:d8e8a4590a19c85e4d2d23",
+        "android_client_info": {
+          "package_name": "com.adialexiu.hashtiger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368022309530-77f61h2fptt1gsvpehqe07n7mkmbrb8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD48WR6aXYClhItgkcdkb31Yyd9Pvakwss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368022309530-77f61h2fptt1gsvpehqe07n7mkmbrb8n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
