@@ -71,7 +71,7 @@ public class loginactivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainMenu.class);
             startActivity(intent);
             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
