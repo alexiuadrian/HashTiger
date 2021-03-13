@@ -14,7 +14,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/logo"
-        tools:layout_editor_absoluteY="112dp" />
+        tools:layout_editor_absoluteY="112dp"
+        android:contentDescription="@string/logo"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
