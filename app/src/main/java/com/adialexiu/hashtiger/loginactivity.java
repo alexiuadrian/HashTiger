@@ -3,10 +3,14 @@ package com.adialexiu.hashtiger;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -16,12 +20,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.internal.$Gson$Preconditions;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class loginactivity extends AppCompatActivity {
 
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
+
+    Button loginButton, registerButton;
+    EditText username, password;
+    TextView additionalMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +59,56 @@ public class loginactivity extends AppCompatActivity {
 
             }
         });
+
+        additionalMessage = findViewById(R.id.additional_text);
+
+        username = findViewById(R.id.usernameText);
+        password = findViewById(R.id.passwordText);
+
+        loginButton = findViewById(R.id.login_local);
+        registerButton = findViewById(R.id.register_local);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(username.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
+                    additionalMessage.setText("One of the inputs are empty!");
+                    additionalMessage.setTextColor(Color.RED);
+                }
+
+                String usernameText = username.getText().toString();
+                String passwordText = password.getText().toString();
+                String passwordToSHA1 = encryptThisString(passwordText);
+
+                // Cauta in baza de date contul cu numele username si parola passwordToSHA1
+
+                // Creeaza Shared Preferences
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(username.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
+                    additionalMessage.setText("One of the inputs are empty!");
+                    additionalMessage.setTextColor(Color.RED);
+                }
+
+                String usernameText = username.getText().toString();
+                String passwordText = password.getText().toString();
+                String passwordToSHA1 = encryptThisString(passwordText);
+
+                // Adauga in baza de date contul cu numele username si parola passwordToSHA1
+
+                // Add success message if it succeeds
+
+//                if(success) {
+//                    additionalMessage.setText("Account added successfully!");
+//                    additionalMessage.setTextColor(Color.GREEN);
+//                }
+            }
+        });
+
     }
 
     private void signIn() {
@@ -88,5 +151,37 @@ public class loginactivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         // Intent here to next activity
+    }
+
+    public static String encryptThisString(String input)
+    {
+        try {
+            // getInstance() method is called with algorithm SHA-1
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+            // digest() method is called
+            // to calculate message digest of the input string
+            // returned as array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+
+            // Add preceding 0s to make it 32 bit
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            // return the HashText
+            return hashtext;
+        }
+
+        // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
