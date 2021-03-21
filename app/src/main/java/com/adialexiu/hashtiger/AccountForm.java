@@ -25,7 +25,10 @@ public class AccountForm extends AppCompatActivity {
         randomPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AccountForm.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                // Call API to generate a password
+
+                Toast.makeText(AccountForm.this, "Password Generated", Toast.LENGTH_SHORT).show();
             }
         });
     }
