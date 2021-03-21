@@ -1,5 +1,6 @@
 package com.adialexiu.hashtiger.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adialexiu.hashtiger.AccountForm;
 import com.adialexiu.hashtiger.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -76,8 +78,8 @@ public class AccountsShow extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getActivity(), AccountForm.class);
+                startActivity(intent);
             }
         });
 
