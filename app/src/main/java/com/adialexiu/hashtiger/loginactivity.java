@@ -2,7 +2,10 @@ package com.adialexiu.hashtiger;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -31,6 +34,9 @@ import java.security.NoSuchAlgorithmException;
 public class loginactivity extends AppCompatActivity {
 
     DatabaseHelper databaseHelper;
+
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
 
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
@@ -86,10 +92,21 @@ public class loginactivity extends AppCompatActivity {
                 String passwordToSHA1 = encryptThisString(passwordText);
 
                 // Cauta in baza de date contul cu numele username si parola passwordToSHA1
-
-                // Creeaza Shared Preferences
+                boolean result = databaseHelper.checkLoginCredentialsInDb(usernameText, passwordToSHA1);
+                if(result) {
+                    // Creeaza Shared Preferences
+                    makeSharedPreferences(usernameText);
+                    Intent intent = new Intent(loginactivity.this, MainMenu.class);
+                    startActivity(intent);
+                }
+                else {
+                    additionalMessage.setText("Wrong username or password!");
+                    additionalMessage.setTextColor(Color.RED);
+                }
             }
         });
+
+
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +145,13 @@ public class loginactivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void makeSharedPreferences(String usernameText) {
+        SharedPreferences preferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PREFERENCES_ID_KEY, usernameText);
+        editor.apply();
     }
 
     private void signIn() {

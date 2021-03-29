@@ -75,13 +75,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean isUserInDb(String usernameText) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public boolean isUserInDb(String username) {
         Cursor res = getAllUsers();
         if (res.getCount() != 0) {
             StringBuffer buffer = new StringBuffer();
             while(res.moveToNext()) {
-                if(usernameText.equals(res.getString(res.getColumnIndex(KEY_USERNAME))))
+                if(username.equals(res.getString(res.getColumnIndex(KEY_USERNAME))))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkLoginCredentialsInDb(String username, String passwordToSHA1) {
+        Cursor res = getAllUsers();
+        if(res.getCount() != 0) {
+            StringBuffer buffer = new StringBuffer();
+            while(res.moveToNext()) {
+                if(username.equals(res.getString(res.getColumnIndex(KEY_USERNAME))) &&
+                        passwordToSHA1.equals(res.getString(res.getColumnIndex(KEY_PASSWORD))))
                     return true;
             }
         }
