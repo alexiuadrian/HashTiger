@@ -3,6 +3,8 @@ package com.adialexiu.hashtiger;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +30,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class loginactivity extends AppCompatActivity {
 
+    DatabaseHelper databaseHelper;
+
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
@@ -40,6 +44,7 @@ public class loginactivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginactivity);
+        databaseHelper = new DatabaseHelper(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -100,12 +105,26 @@ public class loginactivity extends AppCompatActivity {
 
                 // Adauga in baza de date contul cu numele username si parola passwordToSHA1
 
-                // Add success message if it succeeds
+                // Cauta user in DB
+                boolean isUserInDb = databaseHelper.isUserInDb(usernameText);
+                // Daca nu il gaseste, il adauga
+                if(!isUserInDb) {
+                    // Insereaza userul in DB
+                    boolean result = databaseHelper.insertUser(usernameText, passwordToSHA1);
+                    // Add success message if it succeeds
 
-//                if(success) {
-//                    additionalMessage.setText("Account added successfully!");
-//                    additionalMessage.setTextColor(Color.GREEN);
-//                }
+                    if (result == true) {
+                        additionalMessage.setText("Account added successfully!");
+                        additionalMessage.setTextColor(Color.GREEN);
+                    } else {
+                        additionalMessage.setText("Account could not be added!");
+                        additionalMessage.setTextColor(Color.RED);
+                    }
+                }
+                else {
+                    additionalMessage.setText("Username already taken!");
+                    additionalMessage.setTextColor(Color.RED);
+                }
             }
         });
 
