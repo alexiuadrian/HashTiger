@@ -3,6 +3,8 @@ package com.adialexiu.hashtiger;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.Image;
 import android.net.Uri;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     TextView name, email;
     Button logoutButton;
     GoogleSignInClient mGoogleSignInClient;
+    SharedPreferences sharedPref;
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString(PREFERENCES_ID_KEY, null);
+
+        System.out.println(username);
     }
     private void signOut() {
         mGoogleSignInClient.signOut()

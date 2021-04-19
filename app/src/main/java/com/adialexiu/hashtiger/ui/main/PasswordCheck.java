@@ -1,5 +1,7 @@
 package com.adialexiu.hashtiger.ui.main;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -38,8 +40,11 @@ import java.security.NoSuchAlgorithmException;
 public class PasswordCheck extends Fragment {
 
     TextView textView;
-    Button button;
+    Button button, button2;
     EditText editText;
+    SharedPreferences sharedPref;
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -135,8 +140,22 @@ public class PasswordCheck extends Fragment {
                 });
 
                 queue.add(stringRequest);
+
             }
         });
+
+        sharedPref = getActivity().getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString(PREFERENCES_ID_KEY, "Nu merge nimica");
+
+//        button2 = getView().findViewById(R.id.button2);
+//
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println(username);
+//            }
+//        });
 
     }
 

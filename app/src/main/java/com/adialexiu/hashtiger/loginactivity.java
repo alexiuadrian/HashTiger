@@ -52,6 +52,8 @@ public class loginactivity extends AppCompatActivity {
         setContentView(R.layout.activity_loginactivity);
         databaseHelper = new DatabaseHelper(this);
 
+        // databaseHelper.onUpgrade(databaseHelper.getWritableDatabase(), 2, 3);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -83,8 +85,9 @@ public class loginactivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(username.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
-                    additionalMessage.setText("One of the inputs are empty!");
+                    additionalMessage.setText("One or more of the inputs are empty!");
                     additionalMessage.setTextColor(Color.RED);
+                    return;
                 }
 
                 String usernameText = username.getText().toString();
@@ -93,6 +96,7 @@ public class loginactivity extends AppCompatActivity {
 
                 // Cauta in baza de date contul cu numele username si parola passwordToSHA1
                 boolean result = databaseHelper.checkLoginCredentialsInDb(usernameText, passwordToSHA1);
+
                 if(result) {
                     // Creeaza Shared Preferences
                     makeSharedPreferences(usernameText);
@@ -112,8 +116,9 @@ public class loginactivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(username.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
-                    additionalMessage.setText("One of the inputs are empty!");
+                    additionalMessage.setText("One or more of the inputs are empty!");
                     additionalMessage.setTextColor(Color.RED);
+                    return;
                 }
 
                 String usernameText = username.getText().toString();
@@ -176,10 +181,28 @@ public class loginactivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
+            // Cauta user in DB
+            boolean isUserInDb = databaseHelper.isUserInDb(account.getEmail());
+            // Daca nu il gaseste, il adauga
+            if(!isUserInDb) {
+                // Insereaza userul in DB
+                boolean result = databaseHelper.insertUser(account.getEmail(), "");
+                // Add success message if it succeeds
+
+                if (result == true) {
+                    Toast.makeText(this, "Account added successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Could not create account!", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Logged in successfully!", Toast.LENGTH_SHORT).show();
+            }
+
+            makeSharedPreferences(account.getEmail());
+
             // Signed in successfully, show authenticated UI.
             Intent intent = new Intent(this, MainMenu.class);
             startActivity(intent);
-            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

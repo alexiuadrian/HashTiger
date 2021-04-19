@@ -2,6 +2,8 @@ package com.adialexiu.hashtiger;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +13,9 @@ public class AccountForm extends AppCompatActivity {
 
     TextView username, password;
     TextView randomPassword;
+    SharedPreferences sharedPref;
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,12 @@ public class AccountForm extends AppCompatActivity {
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+
+        sharedPref = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString(PREFERENCES_ID_KEY, "Nu merge nimica");
+
+
 
         randomPassword = findViewById(R.id.random_password);
 
