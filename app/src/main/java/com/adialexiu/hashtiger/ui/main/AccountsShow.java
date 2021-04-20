@@ -8,15 +8,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.adialexiu.hashtiger.AccountForm;
+import com.adialexiu.hashtiger.Credential;
+import com.adialexiu.hashtiger.CredentialsAdapter;
+import com.adialexiu.hashtiger.DatabaseHelper;
 import com.adialexiu.hashtiger.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +32,12 @@ import com.google.android.material.snackbar.Snackbar;
  * create an instance of this fragment.
  */
 public class AccountsShow extends Fragment {
+
+    DatabaseHelper databaseHelper;
+    RecyclerView recyclerView;
+    CredentialsAdapter credentialsAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    List<Credential> credentialList = new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -85,5 +99,19 @@ public class AccountsShow extends Fragment {
             }
         });
 
+        databaseHelper = new DatabaseHelper(this.getContext());
+
+        credentialList = databaseHelper.getAllCredentials();
+
+        recyclerView = getView().findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this.getContext());
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        credentialsAdapter = new CredentialsAdapter(this.getContext(), credentialList, recyclerView);
+
+        recyclerView.setAdapter(credentialsAdapter);
     }
 }

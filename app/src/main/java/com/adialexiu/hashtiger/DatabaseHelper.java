@@ -2,6 +2,7 @@ package com.adialexiu.hashtiger;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -27,14 +30,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME_1 = "credentials";
     private static final String SERVICE_NAME = "serviceName";
-    private static final String FK_USER = "username";
+    private static final String FK_USER = "credential_owner";
     private static final String CREATE_TABLE_1 = "create table " + TABLE_NAME_1 +
             " (" + KEY_ID + " text, " + SERVICE_NAME + " text, " + KEY_USERNAME +
-            " text, " + KEY_PASSWORD + " text, " + FK_USER + "text)";
+            " text, " + KEY_PASSWORD + " text, " + FK_USER + " text )";
 
     private static final String DROP_TABLE_1 = "drop table if exists " + TABLE_NAME_1;
 
     private Context context;
+
+    List<Credential> credentialList = new ArrayList<>();
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -103,6 +108,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         return res;
+    }
+
+
+    SharedPreferences sharedPref;
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
+
+    public List<Credential> getAllCredentials() {
+        sharedPref = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        String username = sharedPref.getString(PREFERENCES_ID_KEY, "Nu merge nimica");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME_1 + " WHERE " + FK_USER + " = '" + username + "'", null);
+
+        while(res.moveToNext()) {
+            int index1 = res.getColumnIndex(DatabaseHelper.KEY_ID);
+            String rowid = res.getString(index1);
+            int index2 = res.getColumnIndex(DatabaseHelper.SERVICE_NAME);
+            String serviceName = res.getString(index2);
+            int index3 = res.getColumnIndex(DatabaseHelper.KEY_USERNAME);
+            String userName = res.getString(index3);
+            int index4 = res.getColumnIndex(DatabaseHelper.KEY_PASSWORD);
+            String password = res.getString(index4);
+            int index5 = res.getColumnIndex(DatabaseHelper.FK_USER);
+            String credentialOwner = res.getString(index5);
+
+            Credential credential = new Credential(rowid, serviceName, userName, password, credentialOwner);
+
+            credentialList.add(credential);
+        }
+
+        return credentialList;
     }
 
     public boolean isUserInDb(String username) {

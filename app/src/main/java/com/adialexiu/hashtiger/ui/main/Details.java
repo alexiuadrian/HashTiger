@@ -1,5 +1,7 @@
 package com.adialexiu.hashtiger.ui.main;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -35,11 +37,12 @@ import java.util.concurrent.Executor;
  */
 public class Details extends Fragment {
 
-    DatabaseHelper databaseHelper;
-    ImageView profilePhoto;
-    TextView name, email;
+    TextView name;
     Button logoutButton;
     GoogleSignInClient mGoogleSignInClient;
+    SharedPreferences sharedPref;
+    public static final String PREFERENCES_KEY = "preferences key";
+    public static final String PREFERENCES_ID_KEY = "preferences id key";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,21 +102,13 @@ public class Details extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
         name = getView().findViewById(R.id.textView);
-        email = getView().findViewById(R.id.textView2);
-        profilePhoto = getView().findViewById(R.id.imageView);
         logoutButton = getView().findViewById(R.id.button_sign_out);
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
+        sharedPref = getActivity().getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-            name.setText(personName);
-            email.setText(personEmail);
-            Glide.with(this).load(String.valueOf(personPhoto)).into(profilePhoto);
-        }
+        String username = sharedPref.getString(PREFERENCES_ID_KEY, "Nu merge nimica");
+
+        name.setText(username);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,10 +129,18 @@ public class Details extends Fragment {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        makeSharedPreferences();
                         Toast.makeText(getActivity(), "Signed Out", Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                     }
                 });
+    }
+
+    private void makeSharedPreferences() {
+        SharedPreferences preferences = getActivity().getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
 }

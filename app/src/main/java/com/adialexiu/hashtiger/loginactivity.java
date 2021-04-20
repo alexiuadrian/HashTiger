@@ -52,7 +52,7 @@ public class loginactivity extends AppCompatActivity {
         setContentView(R.layout.activity_loginactivity);
         databaseHelper = new DatabaseHelper(this);
 
-        // databaseHelper.onUpgrade(databaseHelper.getWritableDatabase(), 2, 3);
+        // databaseHelper.onUpgrade(databaseHelper.getWritableDatabase(), 4, 5);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -77,6 +77,9 @@ public class loginactivity extends AppCompatActivity {
 
         username = findViewById(R.id.usernameText);
         password = findViewById(R.id.passwordText);
+
+        username.setText("");
+        password.setText("");
 
         loginButton = findViewById(R.id.login_local);
         registerButton = findViewById(R.id.register_local);

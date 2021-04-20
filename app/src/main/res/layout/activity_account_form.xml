@@ -74,5 +74,15 @@
             app:layout_constraintTop_toBottomOf="@+id/password"
             android:layout_marginTop="20dp"/>
 
+        <TextView
+            android:id="@+id/additional_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/submit"
+            android:textSize="20dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
